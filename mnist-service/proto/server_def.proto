@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+message Empty {
+    
+}
+
+message MnistRequest {
+
+}
+
+message MnistResponse {
+    string label = 1;
+    repeated float pixels = 2;
+}
+
+service MnistService {
+    rpc GetImage(MnistRequest) returns (stream MnistResponse);
+}
