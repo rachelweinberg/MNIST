@@ -19,17 +19,20 @@ const server = new grpc.Server();
 
 server.addService(mnistProto.MnistService.service, {
     getImage: async (call) => {
-        try {
-          getData().then((images) => {
-            images.forEach((image) => {
-              call.write(image);
+      getData()
+        .then((images) => {
+          images.forEach((image) => {
+            call.write(image);
           });
-      
           call.end();
+        })
+        .catch((error) => {
+          console.error('Error in getData:', error.message);
+          call.emit('error', {
+            code: grpc.status.INTERNAL,
+            details: error.message,
           });
-        } catch (error) {
-            call(error, null);
-        }
+        });
     }
 });
 
@@ -47,18 +50,28 @@ server.bindAsync(
     return new Promise((resolve, reject) => {
       const dataByIndex = [];
   
-      fs.createReadStream('./mnist_test.csv')
+      const stream = fs.createReadStream('./mnist_test1.csv');
+  
+      stream
+        .on('error', (error) => {
+          reject(error); // Handle file read error
+        })
         .pipe(csv())
         .on('data', (row) => {
-          const label = row.label;
-          const pixels = Object.values(row).slice(1).map(Number);
-          dataByIndex.push({ label, pixels });
+          try {
+            const label = row.label;
+            const pixels = Object.values(row).slice(1).map(Number);
+            dataByIndex.push({ label, pixels });
+          } catch (error) {
+            // Handle row processing error
+            reject(error);
+          }
         })
-        .on('end', () => {  
+        .on('end', () => {
           resolve(dataByIndex);
         })
         .on('error', (error) => {
-          reject(error);
+          reject(error); // Handle CSV parsing error
         });
     });
   };
