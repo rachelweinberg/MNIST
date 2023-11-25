@@ -21,10 +21,12 @@ server.addService(mnistProto.MnistService.service, {
     getImage: async (call) => {
       getData()
         .then((images) => {
+          console.log(`getImage: call started, streaming ${images.length} images`);
           images.forEach((image) => {
             call.write(image);
           });
           call.end();
+          console.log('getImage: call ended');
         })
         .catch((error) => {
           console.error('Error in getData:', error.message);
@@ -60,8 +62,8 @@ server.bindAsync(
         .on('data', (row) => {
           try {
             const label = row.label;
-            const pixels = Object.values(row).slice(1).map(Number);
-            dataByIndex.push({ label, pixels });
+            const pixel = Object.values(row).slice(1).map(Number);
+            dataByIndex.push({ label, pixel });
           } catch (error) {
             // Handle row processing error
             reject(error);
