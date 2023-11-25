@@ -50,7 +50,7 @@ server.bindAsync(
     return new Promise((resolve, reject) => {
       const dataByIndex = [];
   
-      const stream = fs.createReadStream('./mnist_test1.csv');
+      const stream = fs.createReadStream('./mnist_test.csv');
   
       stream
         .on('error', (error) => {
