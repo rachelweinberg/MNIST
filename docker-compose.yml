@@ -18,7 +18,7 @@ services:
 
   client:
     ports:
-      - "3007:3000"
+      - "3000:3000"
     build:
       context: .
       dockerfile: Dockerfile.client

@@ -2,18 +2,18 @@
 
 ## Dockerized environment:
 
-RUN `docker-compose up -d --build`
+RUN `docker-compose up -d`
 
 ## Local
 
 ### Server
 * RUN `cd mnist-service`
-* RUN `cp ../proto ./proto`
+* RUN `cp -r ../proto ./proto`
 * RUN `npm install`
 * RUN `node server.js`
 
 ### Envoy Proxy
-* RUN `docker-compose up --build envoy`
+* RUN `docker-compose up envoy`
 
 ### Client
 *  generate proto files: 

@@ -38,7 +38,7 @@ server.addService(mnistProto.MnistService.service, {
 });
 
 server.bindAsync(
-  "127.0.0.1:5000",
+  "0.0.0.0:5000",
   grpc.ServerCredentials.createInsecure(),
   (error, port) => {
     console.log(`listening on port ${port}`);

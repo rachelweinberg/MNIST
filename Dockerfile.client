@@ -14,9 +14,15 @@ COPY ./proto ./proto
 RUN npm install
 
 # generate proto file
-RUN npm install grpc-tools
+RUN npm install -g grpc-tools --unsafe-perm=true --allow-root
 RUN mkdir -p ./src/proto
 
-RUN npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src --grpc_out=./src  --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./src ./proto/server_def.proto
+# generate proto file
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -LO https://github.com/grpc/grpc-web/releases/download/1.3.0/protoc-gen-grpc-web-1.3.0-linux-x86_64 && \
+    mv protoc-gen-grpc-web-1.3.0-linux-x86_64 /usr/local/bin/protoc-gen-grpc-web && \
+    chmod +x /usr/local/bin/protoc-gen-grpc-web
+RUN npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./src ./proto/server_def.proto
 
 CMD [ "npm", "start" ]
