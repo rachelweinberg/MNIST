@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  backend:
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+
+  envoy:
+    ports:
+      - "8080:8080"
+      - "9901:9901"
+    build:
+      context: .
+      dockerfile: Dockerfile.envoy
+
+  client:
+    ports:
+      - "3007:3000"
+    build:
+      context: .
+      dockerfile: Dockerfile.client
