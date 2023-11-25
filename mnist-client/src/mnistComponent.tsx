@@ -20,13 +20,13 @@ const MnistComponent = () => {
           setImages((prevImages) => [...prevImages, { label, pixels }]);
         } catch (error) {
           console.error(error);
-          alert('error trying to get images, try agaun later')
+          alert('error trying to get images, try again later')
         }
       });
 
       stream.on('error', (error) => {
         console.error('Error from server:', error);
-        alert('error trying to get images, try agaun later')
+        alert('error trying to get images, try again later')
       });
 
       stream.on('end', () => {
