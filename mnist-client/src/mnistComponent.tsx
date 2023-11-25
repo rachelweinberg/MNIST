@@ -8,34 +8,39 @@ const MnistComponent = () => {
     const [images, setImages] = useState<any>([]);
 
     const getImages = () => {
-        const client = new MnistServiceClient('http://localhost:8080');
-        const request = new MnistRequest();
-        const stream = client.getImage(request);
+        try {        
+            const client = new MnistServiceClient('http://localhost:8080');
+            const request = new MnistRequest();
+            const stream = client.getImage(request);
 
-        stream.on('data', (image) => {
-            const label = image.getLabel();
-            const pixels = image.getPixelsList();
-            setImages((prevImages) => [...prevImages, {label, pixels}]);
-        });
+            stream.on('data', (image) => {
+                try {
+                    const label = image.getLabel();
+                    const pixels = image.getPixelsList();
+                    setImages((prevImages) => [...prevImages, {label, pixels}]);
+                } catch (error) {
+                    console.error(error);
+                    alert('error trying to get images, try agaun later')
+                }
+            });
 
-        stream.on('error', (error) => {
-            console.error('Error from server:', error);
-          });
-      
-        stream.on('end', () => {
-            console.log('Stream ended');
-        });
-    }
-
-    const stop = () => {
-        stream.cancel();
+            stream.on('error', (error) => {
+                console.error('Error from server:', error);
+                alert('error trying to get images, try agaun later')
+            });
+        
+            stream.on('end', () => {
+                console.log('Stream ended');
+            });
+        } catch (error) {
+            console.log('error');
+        }
     }
 
     return (
         <div>
-            <button onClick={getImages}>start</button>
-            <button onClick={stop}>stop</button>
-            <div style={{display: 'flex'}}>
+            <button onClick={getImages}>load</button>
+            <div style={{display: 'flex', flexWrap: 'wrap'}}>
                 {images.map(({label, pixels}, index) => (
                     <div key={index}>
                         <PixelArrayToImage pixelArray={pixels} width={30} height={5} />

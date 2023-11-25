@@ -10,9 +10,9 @@ message MnistRequest {
 
 message MnistResponse {
     string label = 1;
-    repeated int32 pixel = 2;
+    repeated int32 pixels = 2;
 }
 
 service MnistService {
-    rpc GetImage(MnistRequest) returns (MnistResponse);
+    rpc GetImage(MnistRequest) returns (stream MnistResponse);
 }

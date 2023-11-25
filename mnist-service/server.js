@@ -21,10 +21,12 @@ server.addService(mnistProto.MnistService.service, {
     getImage: async (call) => {
       getData()
         .then((images) => {
+          console.log(`getImage: call started, streaming ${images.length} images`);
           images.forEach((image) => {
             call.write(image);
           });
           call.end();
+          console.log('getImage: call ended');
         })
         .catch((error) => {
           console.error('Error in getData:', error.message);
